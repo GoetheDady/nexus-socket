@@ -1,5 +1,5 @@
 // 导入 NexusSocket 库
-import { NexusSocket } from '../../../dist/index.js';
+import { NexusSocket } from '../../../dist/index.esm.js';
 
 // DOM 元素
 const statusIndicator = document.getElementById('status-indicator');

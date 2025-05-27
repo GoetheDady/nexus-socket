@@ -1,11 +1,17 @@
 import { BaseWebSocket } from './BaseWebSocket';
 import { WebSocketProtocols } from '../types';
+import { version } from '../version';
 
 /**
  * NexusSocket - 基础 WebSocket 封装
  * 继承 BaseWebSocket，保持与原生 WebSocket 相同的使用方式
  */
 export class NexusSocket extends BaseWebSocket {
+  /**
+   * 库版本号
+   */
+  static readonly version: string = version;
+  
   /**
    * 构造函数
    * @param url WebSocket 服务器地址

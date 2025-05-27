@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NexusSocket UMD 测试页面</title>
+  <style>
+    body {
+      font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .card {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    pre {
+      background-color: #f5f5f5;
+      padding: 10px;
+      border-radius: 4px;
+      overflow: auto;
+    }
+    button {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      background-color: #1976d2;
+      color: white;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+    button:hover {
+      background-color: #1565c0;
+    }
+    #status {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    #log {
+      height: 300px;
+      overflow-y: auto;
+      border: 1px solid #eee;
+      padding: 10px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>NexusSocket UMD 测试页面</h1>
+    
+    <div class="card">
+      <h2>库信息</h2>
+      <p>这个页面使用 UMD 格式的 NexusSocket 库，可以直接通过 script 标签引入。</p>
+      <pre>window.NexusSocket</pre>
+    </div>
+    
+    <div class="card">
+      <h2>WebSocket 测试</h2>
+      <div>
+        <button id="connect">连接</button>
+        <button id="disconnect" disabled>断开</button>
+        <button id="send" disabled>发送消息</button>
+      </div>
+      <div id="status">状态：未连接</div>
+      <div id="log"></div>
+    </div>
+  </div>
+
+  <!-- 引入 UMD 格式的库 -->
+  <script src="../../../dist/nexus-socket.min.js"></script>
+  
+  <script>
+    // DOM 元素
+    const connectBtn = document.getElementById('connect');
+    const disconnectBtn = document.getElementById('disconnect');
+    const sendBtn = document.getElementById('send');
+    const statusEl = document.getElementById('status');
+    const logEl = document.getElementById('log');
+    
+    // WebSocket 实例
+    let socket = null;
+    
+    // 添加日志
+    function log(message, type = 'info') {
+      const entry = document.createElement('div');
+      entry.style.color = type === 'error' ? 'red' : 
+                         type === 'success' ? 'green' : 
+                         type === 'system' ? 'orange' : 'black';
+      
+      const time = new Date().toLocaleTimeString();
+      entry.textContent = `[${time}] ${message}`;
+      
+      logEl.appendChild(entry);
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+    
+    // 更新按钮状态
+    function updateButtons(isConnected) {
+      connectBtn.disabled = isConnected;
+      disconnectBtn.disabled = !isConnected;
+      sendBtn.disabled = !isConnected;
+      
+      statusEl.textContent = `状态：${isConnected ? '已连接' : '未连接'}`;
+      statusEl.style.color = isConnected ? 'green' : 'black';
+    }
+    
+    // 连接
+    connectBtn.addEventListener('click', () => {
+      try {
+        log('正在连接到 WebSocket 服务器...', 'system');
+        
+        // 使用全局的 NexusSocket
+        socket = new NexusSocket('ws://localhost:8080');
+        
+        socket.onopen = () => {
+          log('连接成功！', 'success');
+          updateButtons(true);
+        };
+        
+        socket.onmessage = (event) => {
+          try {
+            const data = JSON.parse(event.data);
+            log(`收到消息: ${JSON.stringify(data)}`, 'info');
+          } catch {
+            log(`收到消息: ${event.data}`, 'info');
+          }
+        };
+        
+        socket.onclose = (event) => {
+          log(`连接关闭: 代码 ${event.code}, 原因: ${event.reason || '未知'}`, 'system');
+          updateButtons(false);
+          socket = null;
+        };
+        
+        socket.onerror = () => {
+          log('连接错误', 'error');
+          updateButtons(false);
+        };
+        
+      } catch (error) {
+        log(`连接失败: ${error.message}`, 'error');
+      }
+    });
+    
+    // 断开连接
+    disconnectBtn.addEventListener('click', () => {
+      if (socket) {
+        socket.close(1000, '用户主动断开连接');
+        log('正在断开连接...', 'system');
+      }
+    });
+    
+    // 发送消息
+    sendBtn.addEventListener('click', () => {
+      if (socket && socket.readyState === socket.OPEN) {
+        const message = {
+          type: 'ping',
+          message: '来自 UMD 测试页面的消息',
+          timestamp: new Date().toISOString()
+        };
+        
+        socket.send(JSON.stringify(message));
+        log(`发送消息: ${JSON.stringify(message)}`, 'info');
+      }
+    });
+    
+    // 初始化
+    log('页面已加载，可以开始测试', 'system');
+    log(`NexusSocket 版本: ${NexusSocket.version || '未知'}`, 'system');
+  </script>
+</body>
+</html> 
