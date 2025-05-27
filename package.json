@@ -6,7 +6,10 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "dev": "tsc --watch"
+    "dev": "tsc --watch",
+    "test:server": "pnpm --filter nexus-socket-test-server start",
+    "test:client": "pnpm --filter nexus-socket-test-client dev",
+    "setup": "pnpm install && pnpm -r install"
   },
   "keywords": [
     "websocket",
@@ -17,6 +20,8 @@
   "license": "ISC",
   "packageManager": "pnpm@10.7.0",
   "devDependencies": {
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "ws": "^8.16.0",
+    "vite": "^5.2.8"
   }
 }

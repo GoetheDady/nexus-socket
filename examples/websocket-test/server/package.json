@@ -1,0 +1,11 @@
+{
+  "name": "nexus-socket-test-server",
+  "version": "1.0.0",
+  "description": "测试服务器，用于测试 NexusSocket 库",
+  "main": "index.js",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "node index.js"
+  }
+} 

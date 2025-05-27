@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NexusSocket 测试页面</title>
+  <style>
+    body {
+      font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .card {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .status-indicator {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: #ccc;
+    }
+    .status-indicator.connected {
+      background-color: #4caf50;
+    }
+    .status-indicator.disconnected {
+      background-color: #f44336;
+    }
+    .status-indicator.connecting {
+      background-color: #ff9800;
+    }
+    .message-list {
+      height: 300px;
+      overflow-y: auto;
+      border: 1px solid #eee;
+      padding: 10px;
+      border-radius: 4px;
+      background-color: #f9f9f9;
+    }
+    .message {
+      margin-bottom: 8px;
+      padding: 8px;
+      border-radius: 4px;
+    }
+    .message.server {
+      background-color: #e3f2fd;
+    }
+    .message.client {
+      background-color: #f1f8e9;
+      text-align: right;
+    }
+    .message.system {
+      background-color: #fff3e0;
+      font-style: italic;
+    }
+    .message .time {
+      font-size: 0.8em;
+      color: #666;
+    }
+    .message .content {
+      margin-top: 4px;
+    }
+    .controls {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    button {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      background-color: #1976d2;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #1565c0;
+    }
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+    input[type="text"] {
+      flex: 1;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    .echo-form {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>NexusSocket 测试页面</h1>
+    
+    <div class="card">
+      <h2>连接状态</h2>
+      <div class="status">
+        <div id="status-indicator" class="status-indicator"></div>
+        <span id="status-text">未连接</span>
+      </div>
+      <div class="controls">
+        <button id="connect-btn">连接</button>
+        <button id="disconnect-btn" disabled>断开连接</button>
+      </div>
+    </div>
+    
+    <div class="card">
+      <h2>消息记录</h2>
+      <div id="message-list" class="message-list"></div>
+    </div>
+    
+    <div class="card">
+      <h2>发送消息</h2>
+      <button id="ping-btn" disabled>发送 Ping</button>
+      
+      <div class="echo-form">
+        <input type="text" id="echo-input" placeholder="输入要发送的消息...">
+        <button id="echo-btn" disabled>发送 Echo</button>
+      </div>
+    </div>
+  </div>
+  
+  <script type="module" src="./main.js"></script>
+</body>
+</html> 

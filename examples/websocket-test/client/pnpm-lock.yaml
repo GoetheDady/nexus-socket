@@ -8,19 +8,9 @@ importers:
 
   .:
     devDependencies:
-      typescript:
-        specifier: ^5.8.3
-        version: 5.8.3
       vite:
         specifier: ^5.2.8
         version: 5.4.19
-      ws:
-        specifier: ^8.16.0
-        version: 8.18.2
-
-  examples/websocket-test/client: {}
-
-  examples/websocket-test/server: {}
 
 packages:
 
@@ -307,11 +297,6 @@ packages:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
     engines: {node: '>=0.10.0'}
 
-  typescript@5.8.3:
-    resolution: {integrity: sha512-p1diW6TqL9L07nNxvRMM7hMMw4c5XOo/1ibL4aAIGmSAt9slTE1Xgw5KWuof2uTOvCg9BY7ZRi+GaF+7sfgPeQ==}
-    engines: {node: '>=14.17'}
-    hasBin: true
-
   vite@5.4.19:
     resolution: {integrity: sha512-qO3aKv3HoQC8QKiNSTuUM1l9o/XX3+c+VTgLHbJWHZGeTPVAg2XwazI9UWzoxjIJCGCV2zU60uqMzjeLZuULqA==}
     engines: {node: ^18.0.0 || >=20.0.0}
@@ -341,18 +326,6 @@ packages:
       sugarss:
         optional: true
       terser:
-        optional: true
-
-  ws@8.18.2:
-    resolution: {integrity: sha512-DMricUmwGZUVr++AEAe2uiVM7UoO9MAVZMDu05UQOaUII0lp+zOzLLU4Xqh/JvTqklB1T4uELaaPBKyjE1r4fQ==}
-    engines: {node: '>=10.0.0'}
-    peerDependencies:
-      bufferutil: ^4.0.1
-      utf-8-validate: '>=5.0.2'
-    peerDependenciesMeta:
-      bufferutil:
-        optional: true
-      utf-8-validate:
         optional: true
 
 snapshots:
@@ -555,8 +528,6 @@ snapshots:
 
   source-map-js@1.2.1: {}
 
-  typescript@5.8.3: {}
-
   vite@5.4.19:
     dependencies:
       esbuild: 0.21.5
@@ -564,5 +535,3 @@ snapshots:
       rollup: 4.41.1
     optionalDependencies:
       fsevents: 2.3.3
-
-  ws@8.18.2: {}
