@@ -1,0 +1,22 @@
+{
+  "name": "nexus-socket",
+  "version": "1.0.0",
+  "description": "A WebSocket library for browsers with enhanced features",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "keywords": [
+    "websocket",
+    "browser",
+    "client"
+  ],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.7.0",
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  }
+}
