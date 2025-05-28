@@ -16,46 +16,35 @@ const terserOptions = {
   }
 };
 
-export default defineConfig([
-  // ESM 和 CommonJS 构建
-  {
-    input: 'src/index.ts',
-    output: [
-      {
-        file: pkg.module,
-        format: 'esm',
-        sourcemap: true,
-        plugins: [terser(terserOptions)]
-      },
-      {
-        file: pkg.main,
-        format: 'cjs',
-        sourcemap: true,
-        plugins: [terser(terserOptions)]
-      }
-    ],
-    plugins: [
-      typescript({ tsconfig: './tsconfig.json' }),
-      resolve(),
-      commonjs()
-    ]
-  },
-  // UMD 构建 (浏览器)
-  {
-    input: 'src/index.ts',
-    output: [
-      {
-        name: 'NexusSocket',
-        file: pkg.browser,
-        format: 'umd',
-        sourcemap: true,
-        plugins: [terser(terserOptions)]
-      }
-    ],
-    plugins: [
-      typescript({ tsconfig: './tsconfig.json' }),
-      resolve(),
-      commonjs()
-    ]
-  }
-]); 
+export default defineConfig({
+  input: 'src/index.ts',
+  output: [
+    // ESM 构建
+    {
+      file: pkg.module,
+      format: 'esm',
+      sourcemap: true,
+      plugins: [terser(terserOptions)]
+    },
+    // CommonJS 构建
+    {
+      file: pkg.main,
+      format: 'cjs',
+      sourcemap: true,
+      plugins: [terser(terserOptions)]
+    },
+    // UMD 构建 (浏览器)
+    {
+      name: 'NexusSocket',
+      file: pkg.browser,
+      format: 'umd',
+      sourcemap: true,
+      plugins: [terser(terserOptions)]
+    }
+  ],
+  plugins: [
+    typescript({ tsconfig: './tsconfig.json' }),
+    resolve(),
+    commonjs()
+  ]
+}); 
