@@ -3,7 +3,10 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import terser from '@rollup/plugin-terser';
 import { defineConfig } from 'rollup';
-import pkg from './package.json' assert { type: 'json' };
+import { readFileSync } from 'fs';
+
+// 使用 Node.js 的 fs 模块读取 package.json
+const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8'));
 
 // 创建 Terser 配置，用于删除 console 语句
 const terserOptions = {

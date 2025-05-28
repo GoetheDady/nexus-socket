@@ -2,6 +2,7 @@
   "name": "nexus-socket",
   "version": "1.0.0",
   "description": "A WebSocket library for browsers with enhanced features",
+  "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "browser": "dist/nexus-socket.min.js",
@@ -10,10 +11,10 @@
     "dist"
   ],
   "scripts": {
-    "build": "npm run build:types && npm run build:js",
+    "build": "pnpm build:types && pnpm build:js",
     "build:types": "tsc --emitDeclarationOnly",
-    "build:js": "rollup -c",
-    "dev": "rollup -c -w",
+    "build:js": "npx rollup -c",
+    "dev": "npx rollup -c -w",
     "test:server": "pnpm --filter nexus-socket-test-server start",
     "test:client": "pnpm --filter nexus-socket-test-client dev",
     "setup": "pnpm install && pnpm -r install"
