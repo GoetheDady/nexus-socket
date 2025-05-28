@@ -13,10 +13,26 @@ const wss = new WebSocketServer({ server });
 // 保存所有连接的客户端
 const clients = new Set();
 
+// 设置连接超时时间（毫秒）
+const TIMEOUT = 5000; // 30 秒
+
 // 当有新的连接时
 wss.on('connection', (ws) => {
   console.log('新客户端连接');
   clients.add(ws);
+  
+  // 设置连接的最后活动时间
+  ws.lastActivity = Date.now();
+  
+  // 创建超时检查定时器
+  ws.aliveTimer = setInterval(() => {
+    const inactiveTime = Date.now() - ws.lastActivity;
+    if (inactiveTime > TIMEOUT) {
+      console.log('客户端超时断开连接');
+      ws.terminate(); // 强制关闭连接
+      clearInterval(ws.aliveTimer);
+    }
+  }, 1000); // 每 10 秒检查一次
   
   // 发送欢迎消息
   ws.send(JSON.stringify({
@@ -27,6 +43,9 @@ wss.on('connection', (ws) => {
   
   // 处理来自客户端的消息
   ws.on('message', (message) => {
+    // 更新最后活动时间
+    ws.lastActivity = Date.now();
+    
     try {
       const data = JSON.parse(message.toString());
       console.log('收到消息:', data);
@@ -57,6 +76,10 @@ wss.on('connection', (ws) => {
   ws.on('close', () => {
     console.log('客户端断开连接');
     clients.delete(ws);
+    // 清除超时检查定时器
+    if (ws.aliveTimer) {
+      clearInterval(ws.aliveTimer);
+    }
   });
 });
 

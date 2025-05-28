@@ -76,41 +76,60 @@ function connect() {
     // 使用 NexusSocket 创建连接
     socket = new NexusSocket('ws://localhost:8080');
     
-    // 连接打开时
-    socket.onopen = (event) => {
-      updateUIState(true);
-      addMessage('system', '已连接到服务器');
-    };
-    
-    // 接收消息时
-    socket.onmessage = (event) => {
-      try {
-        const data = JSON.parse(event.data);
-        addMessage('server', data, data.timestamp);
-      } catch (error) {
-        addMessage('server', event.data);
-      }
-    };
-    
-    // 连接关闭时
-    socket.onclose = (event) => {
-      updateUIState(false);
-      addMessage('system', `连接已关闭: 代码 ${event.code}, 原因: ${event.reason || '未知'}`);
-      socket = null;
-    };
-    
-    // 连接错误时
-    socket.onerror = (event) => {
-      updateUIState(false);
-      addMessage('system', '连接发生错误');
-      console.error('WebSocket 错误:', event);
-    };
-    
+    // 监听所有 WebSocket 事件
+    setupWebSocketEvents();
   } catch (error) {
     updateUIState(false);
     addMessage('system', `连接失败: ${error.message}`);
     console.error('连接错误:', error);
   }
+}
+
+// 设置 WebSocket 事件处理
+function setupWebSocketEvents() {
+  if (!socket) return;
+  
+  // 连接打开时
+  socket.addEventListener('open', (event) => {
+    updateUIState(true);
+    addMessage('system', '已连接到服务器');
+  });
+  
+  // 监听重连成功事件
+  socket.addEventListener('reconnect', (event) => {
+    updateUIState(true);
+    addMessage('system', '重连成功，连接已恢复');
+  });
+  
+  // 接收消息时
+  socket.addEventListener('message', (event) => {
+    try {
+      const data = JSON.parse(event.data);
+      addMessage('server', data, data.timestamp);
+    } catch (error) {
+      addMessage('server', event.data);
+    }
+  });
+  
+  // 连接关闭时
+  socket.addEventListener('close', (event) => {
+    // 只有在正常关闭(1000)的情况下才更新UI状态
+    // 对于非正常关闭，NexusSocket会自动尝试重连，我们不需要更新UI
+    if (event.code === 1000) {
+      updateUIState(false);
+      addMessage('system', `连接已关闭: 代码 ${event.code}, 原因: ${event.reason || '未知'}`);
+      socket = null;
+    } else {
+      addMessage('system', `连接断开: 代码 ${event.code}, 原因: ${event.reason || '未知'}, 正在尝试重连...`);
+      updateUIState(false, true);
+    }
+  });
+  
+  // 连接错误时
+  socket.addEventListener('error', (event) => {
+    addMessage('system', '连接发生错误');
+    console.error('WebSocket 错误:', event);
+  });
 }
 
 // 断开连接

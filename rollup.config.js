@@ -16,9 +16,9 @@ const terserOptions = {
     indent_level: 0   // 不缩进
   },
   compress: {
-    drop_console: true,     // 删除 console 语句
+    // drop_console: true,     // 删除 console 语句
     drop_debugger: true,    // 删除 debugger 语句
-    pure_funcs: ['console.log', 'console.info', 'console.debug', 'console.warn', 'console.error'], // 额外确保移除这些函数
+    // pure_funcs: ['console.log', 'console.info', 'console.debug', 'console.warn', 'console.error'], // 额外确保移除这些函数
     passes: 2,              // 多次压缩以获得更好的结果
     ecma: 2020,             // 使用 ES2020 语法压缩
     conditionals: true,     // 优化条件表达式
